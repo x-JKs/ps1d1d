@@ -1,0 +1,450 @@
+[
+  {
+    "index": 1,
+    "name": "Tower"
+  },
+  {
+    "index": 2,
+    "name": "Iron Banner (Tower)"
+  },
+  {
+    "index": 3,
+    "name": "Queen's Wrath (Tower)"
+  },
+  {
+    "index": 4,
+    "name": "Festival of the Lost (Tower)"
+  },
+  {
+    "index": 5,
+    "name": "SRL (Tower)"
+  },
+  {
+    "index": 6,
+    "name": "The Dawning (Tower)"
+  },
+  {
+    "index": 7,
+    "name": "Crimson Days (Tower)"
+  },
+  {
+    "index": 8,
+    "name": "Patrol Cosmodrome (Honeydew Error)"
+  },
+  {
+    "index": 9,
+    "name": "Patrol Moon (Honeydew Error)"
+  },
+  {
+    "index": 10,
+    "name": "Patrol Venus (Honeydew Error)"
+  },
+  {
+    "index": 11,
+    "name": "Patrol Mars (Honeydew Error)"
+  },
+  {
+    "index": 12,
+    "name": "Vault of Glass (Level 26)"
+  },
+  {
+    "index": 13,
+    "name": "Vault of Glass (Level 30) (Heroic)"
+  },
+  {
+    "index": 14,
+    "name": "Vault of Glass (Level 31) (Epic)"
+  },
+  {
+    "index": 15,
+    "name": "Crota's End (Level 30)"
+  },
+  {
+    "index": 16,
+    "name": "Crota's End (Level 33) (Heroic)"
+  },
+  {
+    "index": 17,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 18,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 19,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 20,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 21,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 22,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 23,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 24,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 25,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 26,
+    "name": "Weekly NF (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 27,
+    "name": "PoE (Level 28)"
+  },
+  {
+    "index": 28,
+    "name": "The Forever Eater (Level 32) (PoE) (Can’t Launch)"
+  },
+  {
+    "index": 29,
+    "name": "The Forever Eater (Level 34) (PoE)"
+  },
+  {
+    "index": 30,
+    "name": "Broken Legion (Level 32) (PoE) (Can’t Launch)"
+  },
+  {
+    "index": 31,
+    "name": "Broken Legion (Level 34) (PoE) (Can’t Launch)"
+  },
+  {
+    "index": 32,
+    "name": "Machine Wrath (Level 32) (PoE) (Can’t Launch)"
+  },
+  {
+    "index": 33,
+    "name": "Machine Wrath (Level 34) (PoE) (Can’t Launch)"
+  },
+  {
+    "index": 34,
+    "name": "Cult of The Worm (Level 32) (Can’t Launch)"
+  },
+  {
+    "index": 35,
+    "name": "Cult of The Worm (Level 34) (Can’t Launch)"
+  },
+  {
+    "index": 36,
+    "name": "Urrox's Grudge (Level 32) (PoE)"
+  },
+  {
+    "index": 37,
+    "name": "Urrox's Grudge (Level 34) (Can’t Launch)"
+  },
+  {
+    "index": 38,
+    "name": "Skolas's Revenge (Level 35) (PoE)"
+  },
+  {
+    "index": 39,
+    "name": "Vestian Outpost"
+  },
+  {
+    "index": 40,
+    "name": "The Lighthouse (Can’t Launch)"
+  },
+  {
+    "index": 71,
+    "name": "Vanguard Nightfall (Light 320)"
+  },
+  {
+    "index": 90,
+    "name": "Cosmodrome Patrol"
+  },
+  {
+    "index": 91,
+    "name": "Dreadnaught Patrol"
+  },
+  {
+    "index": 92,
+    "name": "Mars Patrol"
+  },
+  {
+    "index": 93,
+    "name": "Moon Patrol"
+  },
+  {
+    "index": 94,
+    "name": "Venus Patrol"
+  },
+  {
+    "index": 95,
+    "name": "Clash (In-Game)"
+  },
+  {
+    "index": 96,
+    "name": "Salvage (In-Game)"
+  },
+  {
+    "index": 97,
+    "name": "Skirmish (In-Game)"
+  },
+  {
+    "index": 98,
+    "name": "Rumble (In-Game)"
+  },
+  {
+    "index": 99,
+    "name": "Control (In-Game)"
+  },
+  {
+    "index": 100,
+    "name": "Rift (In-Game)"
+  },
+  {
+    "index": 101,
+    "name": "Trials of Osiris (Light 290) (Can’t Launch)"
+  },
+  {
+    "index": 102,
+    "name": "Iron Banner (Level 40) (Can’t Launch)"
+  },
+  {
+    "index": 105,
+    "name": "Inferno Clash"
+  },
+  {
+    "index": 106,
+    "name": "Inferno Control"
+  },
+  {
+    "index": 107,
+    "name": "Mayhem Clash (In-Game)"
+  },
+  {
+    "index": 108,
+    "name": "Zone Control (In-Game)"
+  },
+  {
+    "index": 109,
+    "name": "Elimination (In-Game)"
+  },
+  {
+    "index": 110,
+    "name": "Arsenal"
+  },
+  {
+    "index": 111,
+    "name": "Doubles (In-Game)"
+  },
+  {
+    "index": 112,
+    "name": "Crimson Doubles (Can’t Launch)"
+  },
+  {
+    "index": 113,
+    "name": "Inferno Rumble"
+  },
+  {
+    "index": 114,
+    "name": "Inferno Skirmish"
+  },
+  {
+    "index": 115,
+    "name": "Inferno Salvage"
+  },
+  {
+    "index": 116,
+    "name": "Inferno Doubles"
+  },
+  {
+    "index": 117,
+    "name": "Mayhem Rumble (In-Game)"
+  },
+  {
+    "index": 118,
+    "name": "Inferno 3v3"
+  },
+  {
+    "index": 119,
+    "name": "Inferno 6v6 (In-Game)"
+  },
+  {
+    "index": 120,
+    "name": "Freelance 3v3"
+  },
+  {
+    "index": 121,
+    "name": "Freelance 6v6"
+  },
+  {
+    "index": 122,
+    "name": "Classic 6v6 (In-Game)"
+  },
+  {
+    "index": 123,
+    "name": "Classic 3v3 (In-Game)"
+  },
+  {
+    "index": 124,
+    "name": "Classic FFA (In-Game)"
+  },
+  {
+    "index": 125,
+    "name": "SRL"
+  },
+  {
+    "index": 126,
+    "name": "SRL (Solo Que)"
+  },
+  {
+    "index": 127,
+    "name": "Rumble (Honeydew Error)"
+  },
+  {
+    "index": 128,
+    "name": "Rumble (The Anomaly)"
+  },
+  {
+    "index": 129,
+    "name": "Rumble (Firebase Delphi)"
+  },
+  {
+    "index": 130,
+    "name": "Rumble (Twilight Gap)"
+  },
+  {
+    "index": 131,
+    "name": "Rumble (Exodus Blue)"
+  },
+  {
+    "index": 132,
+    "name": "Rumble (Rusted Lands)"
+  },
+  {
+    "index": 133,
+    "name": "Rumble (Shores of Time)"
+  },
+  {
+    "index": 134,
+    "name": "Rumble (Bastion)"
+  },
+  {
+    "index": 135,
+    "name": "Rumble (First Light)"
+  },
+  {
+    "index": 136,
+    "name": "Rumble (Blind Watch)"
+  },
+  {
+    "index": 137,
+    "name": "Rumble (Asylum)"
+  },
+  {
+    "index": 138,
+    "name": "Rumble (The Burning Shrine)"
+  },
+  {
+    "index": 139,
+    "name": "Rumble (The Cauldron)"
+  },
+  {
+    "index": 140,
+    "name": "Rumble (Skyshock)"
+  },
+  {
+    "index": 141,
+    "name": "Rumble (Pantheon)"
+  },
+  {
+    "index": 142,
+    "name": "Rumble (Thieves' Den)"
+  },
+  {
+    "index": 143,
+    "name": "Rumble (The Timekeeper)"
+  },
+  {
+    "index": 144,
+    "name": "Rumble (Black Shield)"
+  },
+  {
+    "index": 145,
+    "name": "Rumble (Widow's Court)"
+  },
+  {
+    "index": 146,
+    "name": "Rumble (Sector 618)"
+  },
+  {
+    "index": 147,
+    "name": "Rumble (The Drifter)"
+  },
+  {
+    "index": 148,
+    "name": "Rumble (Crossroads)"
+  },
+  {
+    "index": 149,
+    "name": "Rumble (Memento)"
+  },
+  {
+    "index": 150,
+    "name": "Rumble (Bannerfall)"
+  },
+  {
+    "index": 151,
+    "name": "Rumble (The Dungeons)"
+  },
+  {
+    "index": 152,
+    "name": "Rumble (Frontier)"
+  },
+  {
+    "index": 153,
+    "name": "Rumble (Vertigo)"
+  },
+  {
+    "index": 154,
+    "name": "Rumble (Cathedral of Dusk)"
+  },
+  {
+    "index": 155,
+    "name": "Rumble (Campus Martius)"
+  },
+  {
+    "index": 156,
+    "name": "Rumble (Infinite Descent)"
+  },
+  {
+    "index": 157,
+    "name": "King's Fall (290 Light)"
+  },
+  {
+    "index": 158,
+    "name": "King's Fall (310 Light)"
+  },
+  {
+    "index": 159,
+    "name": "The Lighthouse (Can’t Launch)"
+  },
+  {
+    "index": 160,
+    "name": "Destiny Credits (Cinematic)"
+  },
+  {
+    "index": 326,
+    "name": "The Shadow Thief (Light 260)"
+  },
+  {
+    "index": 65535,
+    "name": "First Orbit Screen after Character selection"
+  }
+]
