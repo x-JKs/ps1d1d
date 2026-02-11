@@ -2797,15 +2797,14 @@ namespace ps3d1
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            
+
             const int WM_VSCROLL = 0x115;
             const int WM_MOUSEWHEEL = 0x20A;
-            const int WM_PAINT = 0x000F;
-            
-            if (m.Msg == WM_VSCROLL || m.Msg == WM_MOUSEWHEEL || m.Msg == WM_PAINT)
+
+            if (m.Msg == WM_VSCROLL || m.Msg == WM_MOUSEWHEEL)
             {
+                // Keep native bars hidden without forcing extra paint passes.
                 ShowScrollBar(this.Handle, SB_BOTH, 0);
-                this.Invalidate();
             }
         }
     }
