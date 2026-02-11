@@ -32,9 +32,6 @@ namespace ps3d1
         private bool isDragging = false;
         private Point dragOffset;
 
-        private float glowOffset = 0f;
-        private System.Windows.Forms.Timer glowTimer;
-        
         // Current tab
         private int currentTab = 0;
         
@@ -170,9 +167,6 @@ namespace ps3d1
             licenseRefreshTimer = new System.Windows.Forms.Timer { Interval = 1500 };
             licenseRefreshTimer.Tick += (s, e) => UpdateLicenseLabels();
 
-            glowTimer = new System.Windows.Forms.Timer { Interval = 30 };
-            glowTimer.Tick += GlowTimer_Tick;
-            glowTimer.Start();
         }
 
         private void SetupUI()
@@ -192,7 +186,6 @@ namespace ps3d1
             {
                 SaveHotkeyPreferences();
                 licenseRefreshTimer?.Stop();
-                glowTimer?.Stop();
                 Authentication.AuthStateChanged -= HandleAuthStateChanged;
             };
 
@@ -272,12 +265,12 @@ namespace ps3d1
             // === TITLE BAR ===
             lblTitle = new Label
             {
-                Text = string.Empty,
+                Text = "ps3d1",
                 Font = new Font("Segoe UI Semibold", 11f),
                 ForeColor = Theme.Text,
                 Location = new Point(14, 9),
                 AutoSize = true,
-                Visible = false
+                Visible = true
             };
             this.Controls.Add(lblTitle);
 
@@ -312,7 +305,7 @@ namespace ps3d1
             this.Controls.Add(btnMin);
 
             // === LEFT PANEL WITH SCROLL ===
-            panelLeft = new Panel
+            panelLeft = new DarkScrollPanel
             {
                 Location = new Point(0, 38),
                 Size = new Size(161, this.Height - 38),
@@ -1134,8 +1127,11 @@ namespace ps3d1
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // Draw animated border glow
-            DrawAnimatedBorderGlow(e.Graphics);
+            // Draw title bar background to match sidebar/menu palette
+            using (var brush = new SolidBrush(Theme.LeftPanel))
+            {
+                e.Graphics.FillRectangle(brush, 0, 0, this.Width, 38);
+            }
 
             // Draw main border
             using (var pen = new Pen(Theme.CardBorder, 1))
@@ -1149,62 +1145,6 @@ namespace ps3d1
                 int sidebarWidth = panelLeft?.Width ?? 161;
                 e.Graphics.DrawLine(pen, sidebarWidth, 38, this.Width, 38);
             }
-        }
-
-        private void DrawAnimatedBorderGlow(Graphics g)
-        {
-            int glowSize = 100;
-            int glowIntensity = 80;
-            
-            // Calculate total perimeter
-            float perimeter = (this.Width - 1) * 2 + (this.Height - 1) * 2;
-            float currentPos = (glowOffset * perimeter);
-            
-            PointF glowPosition = PointF.Empty;
-            
-            // Top edge (0 to Width)
-            if (currentPos < this.Width)
-            {
-                glowPosition = new PointF(currentPos, 0);
-            }
-            // Right edge (Width to Width + Height)
-            else if (currentPos < this.Width + this.Height)
-            {
-                glowPosition = new PointF(this.Width - 1, currentPos - this.Width);
-            }
-            // Bottom edge (Width + Height to 2*Width + Height)
-            else if (currentPos < this.Width * 2 + this.Height)
-            {
-                glowPosition = new PointF(this.Width - (currentPos - this.Width - this.Height), this.Height - 1);
-            }
-            // Left edge (2*Width + Height to perimeter)
-            else
-            {
-                glowPosition = new PointF(0, this.Height - (currentPos - this.Width * 2 - this.Height));
-            }
-            
-            // Draw glow with gradient brush
-            using (var path = new GraphicsPath())
-            {
-                path.AddEllipse(glowPosition.X - glowSize / 2, glowPosition.Y - glowSize / 2, glowSize, glowSize);
-                using (var pgb = new PathGradientBrush(path))
-                {
-                    pgb.CenterColor = Color.FromArgb(glowIntensity, 100, 160, 255);
-                    pgb.SurroundColors = new[] { Color.FromArgb(0, 100, 160, 255) };
-                    pgb.FocusScales = new PointF(0.3f, 0.3f);
-                    g.FillPath(pgb, path);
-                }
-            }
-        }
-
-        private void GlowTimer_Tick(object sender, EventArgs e)
-        {
-            glowOffset += 0.002f;
-            if (glowOffset >= 1f)
-            {
-                glowOffset = 0f;
-            }
-            this.Invalidate();
         }
 
         protected override void OnResize(EventArgs e)
@@ -2792,7 +2732,7 @@ namespace ps3d1
                     this.ClientSize.Height
                 );
 
-                using (var trackBrush = new SolidBrush(Color.FromArgb(24, 24, 24)))
+                using (var trackBrush = new SolidBrush(Form1.Theme.LeftPanel))
                 {
                     e.Graphics.FillRectangle(trackBrush, trackRect);
                 }
@@ -2815,7 +2755,7 @@ namespace ps3d1
                     );
 
                     // Draw thumb
-                    using (var thumbBrush = new SolidBrush(Color.FromArgb(65, 65, 65)))
+                    using (var thumbBrush = new SolidBrush(Form1.Theme.TabActive))
                     {
                         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                         if (thumbRect.Height > 8)
@@ -2857,15 +2797,14 @@ namespace ps3d1
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            
+
             const int WM_VSCROLL = 0x115;
             const int WM_MOUSEWHEEL = 0x20A;
-            const int WM_PAINT = 0x000F;
-            
-            if (m.Msg == WM_VSCROLL || m.Msg == WM_MOUSEWHEEL || m.Msg == WM_PAINT)
+
+            if (m.Msg == WM_VSCROLL || m.Msg == WM_MOUSEWHEEL)
             {
+                // Keep native bars hidden without forcing extra paint passes.
                 ShowScrollBar(this.Handle, SB_BOTH, 0);
-                this.Invalidate();
             }
         }
     }
