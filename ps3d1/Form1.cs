@@ -1912,8 +1912,7 @@ namespace ps3d1
                 new object[] { (uint)1 }
             };
 
-            bool invoked = TryInvokeAnyWithCandidates(api.Connections, attachMethods, candidates, out result) ||
-                           TryInvokeAnyWithCandidates(api, attachMethods, candidates, out result);
+            bool invoked = TryInvokeAnyWithCandidates(api, attachMethods, candidates, out result);
 
             if (!invoked)
             {
@@ -1955,13 +1954,11 @@ namespace ps3d1
                 {
                     object ignored;
                     TryInvokeAny(api, new[] { "SetAPI", "SetApi", "ChangeAPI", "SelectAPI" }, new[] { ccapiEnumValue }, out ignored);
-                    TryInvokeAny(api.Connections, new[] { "SetAPI", "SetApi", "ChangeAPI", "SelectAPI" }, new[] { ccapiEnumValue }, out ignored);
                 }
                 else
                 {
                     object ignored;
                     TryInvokeAny(api, new[] { "SetAPI", "SetApi", "ChangeAPI", "SelectAPI" }, new object[] { 1 }, out ignored);
-                    TryInvokeAny(api.Connections, new[] { "SetAPI", "SetApi", "ChangeAPI", "SelectAPI" }, new object[] { 1 }, out ignored);
                 }
             }
             catch { }
@@ -1976,19 +1973,10 @@ namespace ps3d1
 
                 object result;
                 bool invoked = TryInvokeAny(
-                    api.Connections,
+                    api,
                     new[] { "ConnectTarget", "connectTarget", "Connect", "connect", "CCAPIConnect", "ConnectCCAPI" },
                     new object[] { ip },
                     out result);
-
-                if (!invoked)
-                {
-                    invoked = TryInvokeAny(
-                        api,
-                        new[] { "ConnectTarget", "connectTarget", "Connect", "connect", "CCAPIConnect", "ConnectCCAPI" },
-                        new object[] { ip },
-                        out result);
-                }
 
                 if (!invoked)
                 {
