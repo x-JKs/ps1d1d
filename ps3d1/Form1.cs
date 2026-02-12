@@ -32,9 +32,6 @@ namespace ps3d1
         private bool isDragging = false;
         private Point dragOffset;
 
-        private float glowOffset = 0f;
-        private System.Windows.Forms.Timer glowTimer;
-        
         // Current tab
         private int currentTab = 0;
         
@@ -170,9 +167,6 @@ namespace ps3d1
             licenseRefreshTimer = new System.Windows.Forms.Timer { Interval = 1500 };
             licenseRefreshTimer.Tick += (s, e) => UpdateLicenseLabels();
 
-            glowTimer = new System.Windows.Forms.Timer { Interval = 30 };
-            glowTimer.Tick += GlowTimer_Tick;
-            glowTimer.Start();
         }
 
         private void SetupUI()
@@ -192,7 +186,6 @@ namespace ps3d1
             {
                 SaveHotkeyPreferences();
                 licenseRefreshTimer?.Stop();
-                glowTimer?.Stop();
                 Authentication.AuthStateChanged -= HandleAuthStateChanged;
             };
 
@@ -242,6 +235,8 @@ namespace ps3d1
 
         // Content controls
         private Label lblStatusValue;
+        private TextBox txtConsoleIp;
+        private readonly string ccapiTargetPath = Path.Combine(Application.StartupPath, "ccapi_target.txt");
         private TextBox txtTeleX, txtTeleY, txtTeleZ;
         private ListView lvPositions;
         private Label lblTeleportHotkey;
@@ -272,12 +267,12 @@ namespace ps3d1
             // === TITLE BAR ===
             lblTitle = new Label
             {
-                Text = string.Empty,
+                Text = "ps3d1",
                 Font = new Font("Segoe UI Semibold", 11f),
                 ForeColor = Theme.Text,
                 Location = new Point(14, 9),
                 AutoSize = true,
-                Visible = false
+                Visible = true
             };
             this.Controls.Add(lblTitle);
 
@@ -312,7 +307,7 @@ namespace ps3d1
             this.Controls.Add(btnMin);
 
             // === LEFT PANEL WITH SCROLL ===
-            panelLeft = new Panel
+            panelLeft = new DarkScrollPanel
             {
                 Location = new Point(0, 38),
                 Size = new Size(161, this.Height - 38),
@@ -385,6 +380,7 @@ namespace ps3d1
             InitializeFeatureHotkeys();
             InitializeActivityCombo();
             LoadHotkeyPreferences();
+            LoadSavedCcapiTarget();
 
             UpdateLicenseLabels();
             UpdateLayoutSizing();
@@ -499,15 +495,22 @@ namespace ps3d1
             panel.Controls.Add(lblStatusValue);
             y += 35;
 
-            var btnConnect = CreateButton("Connect", 20, y, 100, 32);
+            var lblCcapiIp = CreateLabel("CCAPI Target IP", 20, y);
+            panel.Controls.Add(lblCcapiIp);
+
+            txtConsoleIp = CreateTextBox(20, y + 20, 220);
+            panel.Controls.Add(txtConsoleIp);
+
+            var btnConnect = CreateButton("Connect (CCAPI)", 250, y + 18, 130, 32);
             btnConnect.Click += btnConnect_Click;
             panel.Controls.Add(btnConnect);
+            y += 60;
 
-            var btnStart = CreateButton("Install Hook", 130, y, 110, 32);
+            var btnStart = CreateButton("Install Hook", 20, y, 110, 32);
             btnStart.Click += btnStart_Click;
             panel.Controls.Add(btnStart);
 
-            var btnUnhook = CreateButton("Unhook", 250, y, 90, 32);
+            var btnUnhook = CreateButton("Unhook", 240, y, 90, 32);
             btnUnhook.Click += btnUnhook_Click;
             panel.Controls.Add(btnUnhook);
             y += 50;
@@ -1134,8 +1137,11 @@ namespace ps3d1
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // Draw animated border glow
-            DrawAnimatedBorderGlow(e.Graphics);
+            // Draw title bar background to match sidebar/menu palette
+            using (var brush = new SolidBrush(Theme.LeftPanel))
+            {
+                e.Graphics.FillRectangle(brush, 0, 0, this.Width, 38);
+            }
 
             // Draw main border
             using (var pen = new Pen(Theme.CardBorder, 1))
@@ -1149,62 +1155,6 @@ namespace ps3d1
                 int sidebarWidth = panelLeft?.Width ?? 161;
                 e.Graphics.DrawLine(pen, sidebarWidth, 38, this.Width, 38);
             }
-        }
-
-        private void DrawAnimatedBorderGlow(Graphics g)
-        {
-            int glowSize = 100;
-            int glowIntensity = 80;
-            
-            // Calculate total perimeter
-            float perimeter = (this.Width - 1) * 2 + (this.Height - 1) * 2;
-            float currentPos = (glowOffset * perimeter);
-            
-            PointF glowPosition = PointF.Empty;
-            
-            // Top edge (0 to Width)
-            if (currentPos < this.Width)
-            {
-                glowPosition = new PointF(currentPos, 0);
-            }
-            // Right edge (Width to Width + Height)
-            else if (currentPos < this.Width + this.Height)
-            {
-                glowPosition = new PointF(this.Width - 1, currentPos - this.Width);
-            }
-            // Bottom edge (Width + Height to 2*Width + Height)
-            else if (currentPos < this.Width * 2 + this.Height)
-            {
-                glowPosition = new PointF(this.Width - (currentPos - this.Width - this.Height), this.Height - 1);
-            }
-            // Left edge (2*Width + Height to perimeter)
-            else
-            {
-                glowPosition = new PointF(0, this.Height - (currentPos - this.Width * 2 - this.Height));
-            }
-            
-            // Draw glow with gradient brush
-            using (var path = new GraphicsPath())
-            {
-                path.AddEllipse(glowPosition.X - glowSize / 2, glowPosition.Y - glowSize / 2, glowSize, glowSize);
-                using (var pgb = new PathGradientBrush(path))
-                {
-                    pgb.CenterColor = Color.FromArgb(glowIntensity, 100, 160, 255);
-                    pgb.SurroundColors = new[] { Color.FromArgb(0, 100, 160, 255) };
-                    pgb.FocusScales = new PointF(0.3f, 0.3f);
-                    g.FillPath(pgb, path);
-                }
-            }
-        }
-
-        private void GlowTimer_Tick(object sender, EventArgs e)
-        {
-            glowOffset += 0.002f;
-            if (glowOffset >= 1f)
-            {
-                glowOffset = 0f;
-            }
-            this.Invalidate();
         }
 
         protected override void OnResize(EventArgs e)
@@ -1852,23 +1802,265 @@ namespace ps3d1
             catch { }
         }
 
-        // ═══════════════════════════════════════════════════════════════
-        // CONNECTION - From OverSRC Hook
-        // ═══════════════════════════════════════════════════════════════
-        private void btnConnect_Click(object sender, EventArgs e)
+        private void LoadSavedCcapiTarget()
         {
             try
             {
-                api.Connections.showConnectionWindow();
-                api.Extension.EnableRPC(4882496U, true);
-                isConnected = true;
-                lblStatusValue.Text = "CONNECTED";
-                lblStatusValue.ForeColor = Theme.Success;
+                if (txtConsoleIp == null) return;
+                if (File.Exists(ccapiTargetPath))
+                {
+                    txtConsoleIp.Text = File.ReadAllText(ccapiTargetPath).Trim();
+                }
+
+                if (string.IsNullOrWhiteSpace(txtConsoleIp.Text))
+                {
+                    txtConsoleIp.Text = "192.168.1.100";
+                }
             }
             catch
             {
-                lblStatusValue.Text = "ERROR";
+                if (txtConsoleIp != null && string.IsNullOrWhiteSpace(txtConsoleIp.Text))
+                    txtConsoleIp.Text = "192.168.1.100";
+            }
+        }
+
+        private void SaveCcapiTarget()
+        {
+            try
+            {
+                if (txtConsoleIp == null) return;
+                File.WriteAllText(ccapiTargetPath, txtConsoleIp.Text.Trim());
+            }
+            catch { }
+        }
+
+        private bool TryInvokeAny(object target, string[] methodNames, object[] args, out object result)
+        {
+            result = null;
+            if (target == null) return false;
+
+            var methods = target.GetType().GetMethods(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+            foreach (var methodName in methodNames)
+            {
+                foreach (var method in methods)
+                {
+                    if (!string.Equals(method.Name, methodName, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    var parameters = method.GetParameters();
+                    if (parameters.Length != args.Length)
+                        continue;
+
+                    try
+                    {
+                        result = method.Invoke(target, args);
+                        return true;
+                    }
+                    catch
+                    {
+                        // try next overload/name
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool TryInvokeAnyWithCandidates(object target, string[] methodNames, IEnumerable<object[]> argumentCandidates, out object result)
+        {
+            result = null;
+            if (target == null) return false;
+
+            foreach (var args in argumentCandidates)
+            {
+                if (TryInvokeAny(target, methodNames, args, out result))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool WasAttachSuccessful(object invocationResult)
+        {
+            if (invocationResult == null) return true;
+            if (invocationResult is bool b) return b;
+            if (invocationResult is int i) return i >= 0;
+            if (invocationResult is uint ui) return ui > 0;
+            return true;
+        }
+
+        private bool TryAutoAttachDestinyProcess(out string error)
+        {
+            error = string.Empty;
+            object result;
+
+            string[] attachMethods = { "AttachGameProcess", "AttachProcess", "Attach", "AttachToGameProcess", "SetProcess" };
+            var candidates = new List<object[]>
+            {
+                Array.Empty<object>(),
+                new object[] { "destiny" },
+                new object[] { "Destiny" },
+                new object[] { "eboot.bin" },
+                new object[] { "EBOOT.BIN" },
+                new object[] { "BLES" },
+                new object[] { "BLUS" },
+                new object[] { 0 },
+                new object[] { 1 },
+                new object[] { (uint)0 },
+                new object[] { (uint)1 }
+            };
+
+            bool invoked = TryInvokeAnyWithCandidates(api.Connections, attachMethods, candidates, out result) ||
+                           TryInvokeAnyWithCandidates(api, attachMethods, candidates, out result);
+
+            if (!invoked)
+            {
+                error = "Connected to CCAPI, but could not find a compatible attach method in soulsAPI.dll.";
+                return false;
+            }
+
+            if (!WasAttachSuccessful(result))
+            {
+                error = "Connected to CCAPI but failed to attach to the running game process.";
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ForceCcapiModeIfAvailable()
+        {
+            try
+            {
+                var asm = api.GetType().Assembly;
+                var enumType = asm.GetTypes().FirstOrDefault(t => t.IsEnum && t.Name.IndexOf("SelectAPI", StringComparison.OrdinalIgnoreCase) >= 0);
+                object ccapiEnumValue = null;
+
+                if (enumType != null)
+                {
+                    var names = Enum.GetNames(enumType);
+                    var ccapiName = names.FirstOrDefault(n =>
+                        n.IndexOf("CCAPI", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        n.IndexOf("ControlConsole", StringComparison.OrdinalIgnoreCase) >= 0);
+
+                    if (!string.IsNullOrEmpty(ccapiName))
+                    {
+                        ccapiEnumValue = Enum.Parse(enumType, ccapiName);
+                    }
+                }
+
+                if (ccapiEnumValue != null)
+                {
+                    object ignored;
+                    TryInvokeAny(api, new[] { "SetAPI", "SetApi", "ChangeAPI", "SelectAPI" }, new[] { ccapiEnumValue }, out ignored);
+                    TryInvokeAny(api.Connections, new[] { "SetAPI", "SetApi", "ChangeAPI", "SelectAPI" }, new[] { ccapiEnumValue }, out ignored);
+                }
+                else
+                {
+                    object ignored;
+                    TryInvokeAny(api, new[] { "SetAPI", "SetApi", "ChangeAPI", "SelectAPI" }, new object[] { 1 }, out ignored);
+                    TryInvokeAny(api.Connections, new[] { "SetAPI", "SetApi", "ChangeAPI", "SelectAPI" }, new object[] { 1 }, out ignored);
+                }
+            }
+            catch { }
+        }
+
+        private bool ConnectCcapiOnly(string ip, out string error)
+        {
+            error = string.Empty;
+            try
+            {
+                ForceCcapiModeIfAvailable();
+
+                object result;
+                bool invoked = TryInvokeAny(
+                    api.Connections,
+                    new[] { "ConnectTarget", "connectTarget", "Connect", "connect", "CCAPIConnect", "ConnectCCAPI" },
+                    new object[] { ip },
+                    out result);
+
+                if (!invoked)
+                {
+                    invoked = TryInvokeAny(
+                        api,
+                        new[] { "ConnectTarget", "connectTarget", "Connect", "connect", "CCAPIConnect", "ConnectCCAPI" },
+                        new object[] { ip },
+                        out result);
+                }
+
+                if (!invoked)
+                {
+                    error = "Unable to find a CCAPI connection method in soulsAPI.dll.";
+                    return false;
+                }
+
+                if (result is bool boolResult && !boolResult)
+                {
+                    error = "CCAPI rejected the connection request. Verify the target IP and CCAPI plugin state.";
+                    return false;
+                }
+
+                if (!TryAutoAttachDestinyProcess(out string attachError))
+                {
+                    error = attachError;
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                return false;
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // CONNECTION - CCAPI ONLY
+        // ═══════════════════════════════════════════════════════════════
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            string ip = txtConsoleIp?.Text?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(ip))
+            {
+                MessageBox.Show("Enter your PS3 CCAPI target IP first.", "Missing IP", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                lblStatusValue.Text = "CONNECTING...";
+                lblStatusValue.ForeColor = Theme.Accent;
+                Application.DoEvents();
+
+                if (!ConnectCcapiOnly(ip, out string connectError))
+                {
+                    throw new Exception(string.IsNullOrWhiteSpace(connectError) ? "Unknown CCAPI connection error." : connectError);
+                }
+
+                api.Extension.EnableRPC(4882496U, true);
+                SaveCcapiTarget();
+                isConnected = true;
+                lblStatusValue.Text = "CCAPI CONNECTED + ATTACHED";
+                lblStatusValue.ForeColor = Theme.Success;
+            }
+            catch (Exception ex)
+            {
+                isConnected = false;
+                lblStatusValue.Text = "CONNECTION FAILED";
                 lblStatusValue.ForeColor = Theme.Danger;
+                MessageBox.Show(
+                    "CCAPI connection failed." + Environment.NewLine + Environment.NewLine +
+                    ex.Message + Environment.NewLine + Environment.NewLine +
+                    "Make sure:" + Environment.NewLine +
+                    "• Console and PC are on the same network" + Environment.NewLine +
+                    "• CCAPI is installed and running on the PS3" + Environment.NewLine +
+                    "• The target IP is correct",
+                    "Connection Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -2792,7 +2984,7 @@ namespace ps3d1
                     this.ClientSize.Height
                 );
 
-                using (var trackBrush = new SolidBrush(Color.FromArgb(24, 24, 24)))
+                using (var trackBrush = new SolidBrush(Form1.Theme.LeftPanel))
                 {
                     e.Graphics.FillRectangle(trackBrush, trackRect);
                 }
@@ -2815,7 +3007,7 @@ namespace ps3d1
                     );
 
                     // Draw thumb
-                    using (var thumbBrush = new SolidBrush(Color.FromArgb(65, 65, 65)))
+                    using (var thumbBrush = new SolidBrush(Form1.Theme.TabActive))
                     {
                         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
                         if (thumbRect.Height > 8)
@@ -2857,15 +3049,14 @@ namespace ps3d1
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            
+
             const int WM_VSCROLL = 0x115;
             const int WM_MOUSEWHEEL = 0x20A;
-            const int WM_PAINT = 0x000F;
-            
-            if (m.Msg == WM_VSCROLL || m.Msg == WM_MOUSEWHEEL || m.Msg == WM_PAINT)
+
+            if (m.Msg == WM_VSCROLL || m.Msg == WM_MOUSEWHEEL)
             {
+                // Keep native bars hidden without forcing extra paint passes.
                 ShowScrollBar(this.Handle, SB_BOTH, 0);
-                this.Invalidate();
             }
         }
     }
